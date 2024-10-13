@@ -3,10 +3,19 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
+// I AM  DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T:PartialOrd + Copy>(array: &mut [T]){
+	let mut temp;
+    for i in 0..(array.len() - 1) {
+        for j in 0..(array.len() - 1 - i) {
+            if array[j] > array[j + 1] {
+                temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
 }
 #[cfg(test)]
 mod tests {

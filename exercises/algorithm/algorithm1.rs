@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+// I AM DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -29,13 +29,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: std::cmp::PartialOrd+Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: std::cmp::PartialOrd+Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -72,11 +72,40 @@ impl<T> LinkedList<T> {
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut list_a = list_a;
+        let mut list_b = list_b;
+        let mut index_a = 0;
+        let mut index_b = 0;
+        let mut list_c = LinkedList::new();
+        
+        while index_a< list_a.length  || index_b < list_b.length { 
+            let node_a = list_a.get(index_a as i32);
+            let node_b = list_b.get(index_b as i32);
+
+            match (node_a,node_b) {
+                (Some(a),Some(b))=>{
+                    if a >= b {
+                        list_c.add(b.to_owned());
+                        index_b+=1;
+                    }else {
+                        list_c.add(a.to_owned());
+                        index_a+=1;
+                    }
+                },
+                (Some(a),None)=>{
+                    list_c.add(a.to_owned());
+                    index_a+=1;
+                },
+                (None,Some(b))=>{
+                    list_c.add(b.to_owned());
+                    index_b+=1;
+                },
+                (None,None)=>{
+                    panic!("错误");
+                },                                
+            }
         }
+        list_c
 	}
 }
 
