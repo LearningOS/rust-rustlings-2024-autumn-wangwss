@@ -3,8 +3,8 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
-use std::cmp::Ordering;
+//I AM DONE
+use std::cmp::{self, Ordering};
 use std::fmt::Debug;
 
 
@@ -51,12 +51,42 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match &mut self.root {
+            Some(ref mut root)=>{
+                root.insert(value);
+            },
+            None=>self.root = Some(Box::new(TreeNode::new(value))),
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        let mut node: Option<&Box<TreeNode<T>>> = self.root.as_ref();
+        
+        while let Some(item) = node {
+            match item.value.cmp(&value) {
+                Ordering::Equal => {
+                    // key == value
+                    return true;
+                },
+                Ordering::Greater => {
+                    // key > value
+                    match &item.left {
+                        Some(next) => node = Some(&next),
+                        None => node = None,
+                    }
+                },
+                Ordering::Less => {
+                    // key < value
+                    match &item.right {
+                        Some(next) => node = Some(&next),
+                        None => node = None,
+                    }
+                }
+            }
+        };
+        false        
     }
 }
 
@@ -67,6 +97,31 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match self.value.cmp(&value) {
+            Ordering::Equal=>{
+                return;
+            },
+            Ordering::Greater=>{
+                match &mut self.left {
+                    Some(ref mut node)=>{
+                        node.as_mut().insert(value);
+                    },
+                    None=>{
+                        self.left = Some(Box::new(TreeNode::new(value))) ;
+                    }
+                }
+            },
+            Ordering::Less=>{
+                match &mut self.right {
+                    Some(ref mut node)=>{
+                        node.insert(value);
+                    },
+                    None=>{
+                        self.right = Some(Box::new(TreeNode::new(value))) ;
+                    }
+                }
+            }
+        }        
     }
 }
 
